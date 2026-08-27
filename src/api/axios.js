@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { useUserStore } from '../stores/user'
+import { API_BASE } from './config'
 
 // 記錄「正在換發 Token」的 Promise，避免同時觸發多次換發請求
 let refreshPromise = null
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: API_BASE,
   // 讓瀏覽器自動帶上 Refresh Token 的 cookie
   withCredentials: true
 })

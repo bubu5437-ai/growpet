@@ -272,6 +272,7 @@ button:disabled {
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import api from '../api/axios'
+import { API_BASE } from '../api/config'
 import PetAnimator from '../components/PetAnimator.vue'
 import EncouragementBubble from '../components/EncouragementBubble.vue'
 import HabitTracker from '../components/HabitTracker.vue'
@@ -281,7 +282,6 @@ import logo from '../assets/logo.png'
 
 usePageBackground()
 
-const API_BASE = 'http://localhost:3000'
 
 const user = ref(null)
 const pet = ref(null)

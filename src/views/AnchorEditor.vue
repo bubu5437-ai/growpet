@@ -1,10 +1,10 @@
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import api from '../api/axios'
+import { API_BASE } from '../api/config'
 
 // 這是開發用的錨點校準工具，不用做得美觀，能點座標、能匯出 JSON 就好
 
-const API_BASE = 'http://localhost:3000'
 
 // mode: 'pet' = 校準寵物每幀身上的錨點（帽子/配件要疊在哪）
 //       'item' = 校準商品「自己圖片」的 anchorOffset（商品圖片上哪一點對準錨點）

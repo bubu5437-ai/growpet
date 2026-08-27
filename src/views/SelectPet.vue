@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../api/axios'
+import { API_BASE } from '../api/config'
 
 const router = useRouter()
 
@@ -72,7 +73,7 @@ onMounted(() => {
 
         <img
           v-if="pet.image"
-          :src="`http://localhost:3000${pet.image}`"
+          :src="`${API_BASE}${pet.image}`"
           :alt="pet.name"
           class="pet-image"
         />

@@ -1,11 +1,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import api from '../api/axios'
+import { API_BASE } from '../api/config'
 import { usePageBackground } from '../composables/usePageBackground'
 
 usePageBackground()
-
-const API_BASE = 'http://localhost:3000'
 
 const heart = ref(0)
 const items = ref([])

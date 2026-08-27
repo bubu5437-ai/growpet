@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { API_BASE } from '../api/config'
 
 // pet 格式跟資料庫的 Pet 文件一樣：{ frames: [...], frameDuration }
 // equippedHat / equippedAccessory 格式都一樣：{ image, anchorOffset: { x, y }, ... }
@@ -18,8 +19,6 @@ const props = defineProps({
     default: null
   }
 })
-
-const API_BASE = 'http://localhost:3000'
 
 const frameIndex = ref(0)
 
