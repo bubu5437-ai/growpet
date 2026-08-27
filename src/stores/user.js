@@ -9,6 +9,9 @@ export const useUserStore = defineStore('user', () => {
 
   const isLoggedIn = computed(() => !!accessToken.value)
 
+  // 是否已經在本次載入嘗試過用 Refresh Token 恢復登入（避免每次切頁都重打一次）
+  const sessionChecked = ref(false)
+
   // 目前套用的背景主題 class（預設粉色點點），供 usePageBackground 全站共用
   const backgroundClass = ref('bg-pink-dots')
   const backgroundLoaded = ref(false)
@@ -58,6 +61,15 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // 每次載入頁面只嘗試恢復登入一次，回傳最後的登入狀態
+  const restoreSessionOnce = async () => {
+    if (!sessionChecked.value) {
+      sessionChecked.value = true
+      await restoreSession()
+    }
+    return isLoggedIn.value
+  }
+
   // 登出：請後端刪除 Refresh Token，並清空前端狀態
   const logout = async () => {
     try {
@@ -73,10 +85,12 @@ export const useUserStore = defineStore('user', () => {
   return {
     accessToken,
     isLoggedIn,
+    sessionChecked,
     backgroundClass,
     login,
     register,
     restoreSession,
+    restoreSessionOnce,
     logout,
     ensureBackgroundLoaded,
     setBackgroundClass
