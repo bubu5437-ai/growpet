@@ -1,0 +1,157 @@
+:root {
+  --pixel-bg: #faf3e8;
+  --pixel-surface: #ffffff;
+  --pixel-ink: #1a1a1a;
+  --pixel-pink: #ec1e6f;
+  --pixel-pink-dark: #c2135a;
+  --pixel-yellow: #ffd23f;
+  --pixel-cyan: #7fd8e8;
+  --pixel-green: #4caf50;
+  --pixel-grey: #d8d3c8;
+
+  --pixel-border: 3px;
+  --pixel-shadow: 4px 4px 0 var(--pixel-ink);
+  --pixel-shadow-sm: 3px 3px 0 var(--pixel-ink);
+  --pixel-shadow-lg: 6px 6px 0 var(--pixel-ink);
+
+  --font-pixel: 'Press Start 2P', ui-monospace, monospace;
+  --font-body: -apple-system, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+
+  font-family: var(--font-body);
+  color: var(--pixel-ink);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--pixel-bg);
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  /* Vuetify 的 reset 把所有元素預設成 background-repeat: no-repeat，
+     這裡蓋回 repeat，背景圖案才會真的鋪滿、重複顯示 */
+  background-repeat: repeat;
+  color: var(--pixel-ink);
+}
+
+/* Vuetify 預設會在 .v-application 疊一層不透明的白色背景，
+   把 body 這層背景整個蓋住，這裡拿掉讓 body 的背景看得到 */
+.v-application {
+  background: transparent !important;
+}
+
+/* 背景主題 class，不限定套在 body 上，商城/背包的縮圖預覽也共用這幾個 class */
+
+/* 預設背景主題：粉色點點，由 usePageBackground 在掛載/卸載時加到 body */
+.bg-pink-dots {
+  background-color: #ffe9f2;
+  background-image: radial-gradient(#ffffff 5px, transparent 5px);
+  background-size: 44px 44px;
+  background-repeat: repeat;
+}
+
+/* 商城可購買背景主題：淺橘色點點 */
+.bg-orange-dots {
+  background-color: #ffe9d6;
+  background-image: radial-gradient(#ffffff 5px, transparent 5px);
+  background-size: 44px 44px;
+  background-repeat: repeat;
+}
+
+/* 商城可購買背景主題：淺藍色點點 */
+.bg-blue-dots {
+  background-color: #dceaff;
+  background-image: radial-gradient(#ffffff 5px, transparent 5px);
+  background-size: 44px 44px;
+  background-repeat: repeat;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-pixel);
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- 共用像素風元件，各頁面直接加 class 使用 ---------- */
+
+.pixel-card {
+  background: var(--pixel-surface);
+  border: var(--pixel-border) solid var(--pixel-ink);
+  box-shadow: var(--pixel-shadow);
+  border-radius: 0;
+}
+
+.pixel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  line-height: 1.4;
+  background: var(--pixel-pink);
+  color: #fff;
+  border: var(--pixel-border) solid var(--pixel-ink);
+  box-shadow: var(--pixel-shadow-sm);
+  border-radius: 0;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: transform 0.05s ease, box-shadow 0.05s ease, filter 0.15s ease;
+}
+
+.pixel-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.pixel-btn:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--pixel-ink);
+}
+
+.pixel-btn:disabled {
+  background: var(--pixel-grey);
+  color: #766f60;
+  cursor: not-allowed;
+}
+
+.pixel-btn.secondary {
+  background: var(--pixel-cyan);
+  color: var(--pixel-ink);
+}
+
+.pixel-btn.warn {
+  background: #ff6b6b;
+}
+
+.pixel-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  line-height: 1;
+  padding: 5px 8px;
+  border: 2px solid var(--pixel-ink);
+  background: var(--pixel-yellow);
+  color: var(--pixel-ink);
+  border-radius: 0;
+}
+
+.pixel-input {
+  font-family: var(--font-body);
+  font-size: 15px;
+  border: var(--pixel-border) solid var(--pixel-ink);
+  border-radius: 0;
+  padding: 10px 12px;
+  background: #fff;
+  color: var(--pixel-ink);
+}
+
+.pixel-input:focus {
+  outline: none;
+  box-shadow: var(--pixel-shadow-sm);
+}
