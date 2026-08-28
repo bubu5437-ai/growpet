@@ -239,6 +239,13 @@ const achievementStatsByGoal = computed(() => {
   padding: 40px;
 }
 
+/* 手機：40px 內距在窄螢幕會把月曆擠到裝不下，縮小內距 */
+@media (max-width: 600px) {
+  .tasks-page {
+    padding: 16px;
+  }
+}
+
 .tasks-page h1 {
   text-align: center;
   color: var(--pixel-pink);
@@ -257,6 +264,29 @@ const achievementStatsByGoal = computed(() => {
 
 .calendar-wrap :deep(.v-date-picker) {
   box-shadow: none;
+}
+
+/* Vuetify 的 v-date-picker 內建寫死 328px 寬（.v-picker min-width + .v-date-picker width），
+   在窄手機上會超出卡片被切掉。改成完全隨容器寬度縮放。 */
+.calendar-wrap :deep(.v-picker),
+.calendar-wrap :deep(.v-date-picker) {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.calendar-wrap :deep(.v-date-picker-month) {
+  padding-inline: 0;
+}
+
+/* 星期列 + 日期格都在同一個 grid，把固定 min-content / 40px 改成 7 等分 */
+.calendar-wrap :deep(.v-date-picker-month__days) {
+  grid-template-columns: repeat(7, 1fr) !important;
+  column-gap: 0 !important;
+}
+
+.calendar-wrap :deep(.v-date-picker-month__day) {
+  width: auto !important;
+  min-width: 0 !important;
 }
 
 /* 已完成任務的日期：不要 Vuetify 預設的小圓點，改成日期數字後面壓一個淡灰色圓底 */
