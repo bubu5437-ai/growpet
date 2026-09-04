@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../api/axios'
 import { useUserStore } from '../stores/user'
 import { usePageBackground } from '../composables/usePageBackground'
+import AchievementBadge from '../components/AchievementBadge.vue'
 
 usePageBackground()
 
@@ -12,6 +13,25 @@ const userStore = useUserStore()
 
 const user = ref(null)
 const loading = ref(true)
+
+const achievements = ref([])
+const achievementGroups = ref([])
+const achievementsLoading = ref(true)
+
+// 已解鎖 / 總數，顯示在標題旁
+const unlockedCount = computed(
+  () => achievements.value.filter(badge => badge.unlocked).length
+)
+
+// 依分組把徽章整理成 [{ key, label, badges: [] }]，畫面上分區顯示
+const groupedAchievements = computed(() =>
+  achievementGroups.value
+    .map(group => ({
+      ...group,
+      badges: achievements.value.filter(badge => badge.group === group.key)
+    }))
+    .filter(group => group.badges.length > 0)
+)
 
 // 取得目前登入使用者資料
 // 不管記憶體裡有沒有 Access Token 都直接呼叫：
@@ -30,6 +50,23 @@ const getProfile = async () => {
   }
 }
 
+// 取得成就徽章清單（後端每次呼叫都會重新評估，達門檻就自動解鎖）
+const getAchievements = async () => {
+  try {
+    const response = await api.get('/user/achievements')
+
+    achievements.value = response.data.achievements
+    achievementGroups.value = response.data.groups
+  } catch (error) {
+    console.log(error)
+
+    achievements.value = []
+    achievementGroups.value = []
+  } finally {
+    achievementsLoading.value = false
+  }
+}
+
 // 登出
 const logout = async () => {
   await userStore.logout()
@@ -43,6 +80,7 @@ const logout = async () => {
 
 onMounted(() => {
   getProfile()
+  getAchievements()
 })
 </script>
 
@@ -55,17 +93,54 @@ onMounted(() => {
     <p v-if="loading">載入中...</p>
 
     <!-- 已登入 -->
-    <div v-else-if="user" class="card pixel-card">
+    <template v-else-if="user">
 
-      <h2>帳號：{{ user.account }}</h2>
+      <div class="card pixel-card">
 
-      <p>❤️ 愛心：<strong>{{ user.heart }}</strong></p>
+        <h2>帳號：{{ user.account }}</h2>
 
-      <p v-if="user.activeGoal">🎯 目前目標：{{ user.activeGoalLabel }}</p>
+        <p>❤️ 愛心：<strong>{{ user.heart }}</strong></p>
 
-      <button class="pixel-btn warn" @click="logout">登出</button>
+        <p v-if="user.activeGoal">🎯 目前目標：{{ user.activeGoalLabel }}</p>
 
-    </div>
+        <button class="pixel-btn warn" @click="logout">登出</button>
+
+      </div>
+
+      <!-- 成就徽章牆 -->
+      <section class="achievements">
+
+        <div class="achievements-head">
+          <h2>成就徽章</h2>
+          <span
+            v-if="!achievementsLoading && achievements.length"
+            class="pixel-badge"
+          >{{ unlockedCount }} / {{ achievements.length }}</span>
+        </div>
+
+        <p v-if="achievementsLoading">載入中...</p>
+
+        <p v-else-if="!achievements.length">目前沒有成就資料</p>
+
+        <div
+          v-for="group in groupedAchievements"
+          :key="group.key"
+          class="achievement-group"
+        >
+          <h3>{{ group.label }}</h3>
+
+          <div class="badge-grid">
+            <AchievementBadge
+              v-for="badge in group.badges"
+              :key="badge.key"
+              :badge="badge"
+            />
+          </div>
+        </div>
+
+      </section>
+
+    </template>
 
     <!-- 未登入 -->
     <div v-else class="card pixel-card">
@@ -100,5 +175,35 @@ h1 {
 
 .card .pixel-btn {
   margin-top: 8px;
+}
+
+.achievements {
+  margin-top: 30px;
+}
+
+.achievements-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.achievements-head h2 {
+  font-size: 16px;
+}
+
+.achievement-group {
+  margin-top: 18px;
+}
+
+.achievement-group h3 {
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.badge-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 </style>
